@@ -37,6 +37,16 @@ O nível é calculado como `nivel = 300 cm - distância até a água`, porque o 
 - **Trava de segurança:** comando remoto de abrir a comporta é ignorado enquanto o estado for INUNDACAO.
 - **Configuração validada:** limiar recebido só é aceito se `0 < alerta < inundação <= 300`.
 
+## Padrão de qualidade do firmware
+
+Seguindo o padrão pedido nos checkpoints do 2º semestre:
+
+- **Arquivos e funções:** cada responsabilidade em uma biblioteca própria (`sensors`, `control`, `display`, `mqtt`), e as regras de decisão em `regras.cpp`, sem hardware, testáveis no PC.
+- **Enums e structs:** `EstadoNivel` e `ModoComporta` para estados e modos; `LeituraBorda` agrupa nível, estado, comporta e modo, e é o que a tela mostra e o MQTT publica.
+- **Watchdog:** o watchdog de tarefas do ESP32 vigia o loop. Se ele ficar 10 s sem completar uma volta, o ESP32 reinicia sozinho e avisa no monitor serial que o reinício veio do watchdog.
+- **Sem delay:** o loop é uma agenda de tarefas por `millis()`. A reconexão de WiFi e MQTT também não trava o loop.
+- **Interrupção e debounce no botão:** o botão gera uma interrupção na borda de descida. A interrupção só marca o evento; o loop espera 50 ms e confirma que o botão continua pressionado antes de agir, descartando os repiques do contato.
+
 ## Tela local (LCD 20x4)
 
 ```

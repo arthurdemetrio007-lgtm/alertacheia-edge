@@ -24,10 +24,14 @@ void init_display(void)
   escrever_linha(3, "");
 }
 
-void atualizar_display(float nivel_cm, bool sensor_ok, EstadoNivel estado,
-                       bool comporta_fechada, ModoComporta modo,
-                       bool wifi_ok, bool mqtt_ok)
+void atualizar_display(const LeituraBorda& leitura, bool wifi_ok, bool mqtt_ok)
 {
+  const float nivel_cm = leitura.nivel_cm;
+  const bool sensor_ok = leitura.sensor_ok;
+  const EstadoNivel estado = leitura.estado;
+  const bool comporta_fechada = leitura.comporta_fechada;
+  const ModoComporta modo = leitura.modo;
+
   char texto[LCD_COLUNAS + 1];
 
   if (sensor_ok) {

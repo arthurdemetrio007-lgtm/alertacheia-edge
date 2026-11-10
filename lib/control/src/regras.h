@@ -16,6 +16,15 @@ enum ModoComporta {
   MODO_FORCAR_ABRIR = 2   // comando remoto
 };
 
+// Retrato da borda num instante: o que a tela mostra e o que vai para a nuvem.
+struct LeituraBorda {
+  float nivel_cm;
+  bool sensor_ok;
+  EstadoNivel estado;
+  bool comporta_fechada;
+  ModoComporta modo;
+};
+
 // Próximo estado a partir do atual, com histerese na descida.
 EstadoNivel proximo_estado(EstadoNivel atual, float nivel_cm,
                            float limiar_alerta, float limiar_inundacao,

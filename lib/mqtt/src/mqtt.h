@@ -13,7 +13,7 @@ bool wifi_ok(void);
 bool mqtt_ok(void);
 
 // Publica nível, estado e comporta no canal (fields 1, 2 e 3).
-bool publicar_leitura(float nivel_cm, EstadoNivel estado, bool comporta_fechada);
+bool publicar_leitura(const LeituraBorda& leitura);
 
 // Botão de demonstração: alterna NORMAL -> sem MQTT -> sem WiFi -> NORMAL.
 void alternar_falha_simulada(void);

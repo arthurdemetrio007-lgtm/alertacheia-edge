@@ -10,8 +10,6 @@ void init_display(void);
 //   linha 1: estado (NORMAL / ALERTA / INUNDACAO)
 //   linha 2: comporta e modo (AUTO ou REM = remoto)
 //   linha 3: status WiFi e MQTT
-void atualizar_display(float nivel_cm, bool sensor_ok, EstadoNivel estado,
-                       bool comporta_fechada, ModoComporta modo,
-                       bool wifi_ok, bool mqtt_ok);
+void atualizar_display(const LeituraBorda& leitura, bool wifi_ok, bool mqtt_ok);
 
 #endif

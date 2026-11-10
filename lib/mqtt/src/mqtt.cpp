@@ -161,7 +161,7 @@ bool mqtt_ok(void)
   return wifi_ok() && MQTT.connected();
 }
 
-bool publicar_leitura(float nivel_cm, EstadoNivel estado, bool comporta_fechada)
+bool publicar_leitura(const LeituraBorda& leitura)
 {
   if (!mqtt_ok()) {
     Serial.println("Sem MQTT, leitura nao publicada");
@@ -170,7 +170,7 @@ bool publicar_leitura(float nivel_cm, EstadoNivel estado, bool comporta_fechada)
 
   char payload[80];
   snprintf(payload, sizeof(payload), "field1=%.1f&field2=%d&field3=%d",
-           nivel_cm, (int)estado, comporta_fechada ? 1 : 0);
+           leitura.nivel_cm, (int)leitura.estado, leitura.comporta_fechada ? 1 : 0);
 
   String topico = topico_publicacao();
   bool ok = MQTT.publish(topico.c_str(), payload);

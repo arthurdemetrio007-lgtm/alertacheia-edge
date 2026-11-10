@@ -39,6 +39,7 @@
 #define PERIODO_DISPLAY_MS      500UL
 #define PERIODO_RECONEXAO_MS    5000UL
 #define DEBOUNCE_BOTAO_MS       50UL
+#define WATCHDOG_TIMEOUT_MS     10000  // loop travado por 10 s reinicia o ESP32
 #define TAMANHO_MEDIA           5        // média móvel das últimas 5 leituras
 
 // ---------------------------------------------------------------------------

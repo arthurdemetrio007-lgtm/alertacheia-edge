@@ -10,6 +10,7 @@ Ferramenta: Claude (Anthropic).
 4. Envio do erro `MissingPackageManifestError` no primeiro build do PlatformIO.
 5. Envio dos prints do monitor serial durante os testes no Wokwi, mostrando o MQTT reconectando depois de cada publicação.
 6. "o que ficou para trás? o que falta fazer?" para revisar as pendências da entrega.
+7. Envio do recado do professor com o padrão de qualidade do checkpoint 4 (arquivos, funções, structs, enums, watchdog, sem delay, debounce e interrupção).
 
 ## O que a IA fez
 
@@ -20,6 +21,7 @@ Ferramenta: Claude (Anthropic).
 - Leu o código e apontou a causa da reconexão: keepalive padrão de 15 s do PubSubClient com o Wokwi rodando abaixo da velocidade real, fazendo o ThingSpeak derrubar a conexão.
 - Aplicou a correção (`setKeepAlive(60)`), um log de queda de conexão e um ajuste para o aviso da trava de segurança aparecer só uma vez.
 - Fixou a versão da plataforma no `platformio.ini` e espaçou os LEDs no diagrama.
+- Conferiu o código contra o padrão do checkpoint 4 e adicionou o que faltava: watchdog de tarefas, botão por interrupção com debounce e a struct `LeituraBorda`.
 
 ## O que foi revisado por mim
 
