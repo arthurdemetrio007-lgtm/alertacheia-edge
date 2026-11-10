@@ -1,0 +1,9 @@
+[wokwi]
+version = 1
+firmware = '.pio/build/esp32doit-devkit-v1/firmware.bin'
+elf = '.pio/build/esp32doit-devkit-v1/firmware.elf'
+
+# O ThingSpeak fica na nuvem, então a rede pública do Wokwi (Wokwi-GUEST) basta.
+# Só descomente abaixo se for usar um broker local (Mosquitto) com o Wokwi Private Gateway.
+# [net]
+# gateway = "ws://localhost:9011"

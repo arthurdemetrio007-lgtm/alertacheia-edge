@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "author": "Arthur Veiga Demetrio",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "ultra", "top": -150, "left": -170, "attrs": { "distance": "250" } },
+    { "type": "wokwi-lcd2004", "id": "lcd", "top": -170, "left": 160, "attrs": { "pins": "i2c" } },
+    { "type": "wokwi-servo", "id": "comporta", "top": 200, "left": 230, "attrs": {} },
+    { "type": "wokwi-led", "id": "led_verde", "top": 60, "left": -280, "attrs": { "color": "green", "label": "NORMAL" } },
+    { "type": "wokwi-led", "id": "led_amarelo", "top": 60, "left": -200, "attrs": { "color": "yellow", "label": "ALERTA" } },
+    { "type": "wokwi-led", "id": "led_vermelho", "top": 60, "left": -120, "attrs": { "color": "red", "label": "INUNDACAO" } },
+    { "type": "wokwi-resistor", "id": "r_verde", "top": 140, "left": -290, "rotate": 90, "attrs": { "value": "330" } },
+    { "type": "wokwi-resistor", "id": "r_amarelo", "top": 140, "left": -210, "rotate": 90, "attrs": { "value": "330" } },
+    { "type": "wokwi-resistor", "id": "r_vermelho", "top": 140, "left": -130, "rotate": 90, "attrs": { "value": "330" } },
+    { "type": "wokwi-pushbutton", "id": "btn_rede", "top": 330, "left": 140, "attrs": { "color": "blue", "label": "Simular queda de rede" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+
+    [ "ultra:VCC", "esp:5V", "red", [] ],
+    [ "ultra:GND", "esp:GND.1", "black", [] ],
+    [ "ultra:TRIG", "esp:5", "orange", [] ],
+    [ "ultra:ECHO", "esp:18", "purple", [] ],
+
+    [ "lcd:VCC", "esp:5V", "red", [] ],
+    [ "lcd:GND", "esp:GND.2", "black", [] ],
+    [ "lcd:SDA", "esp:21", "blue", [] ],
+    [ "lcd:SCL", "esp:22", "gold", [] ],
+
+    [ "comporta:V+", "esp:5V", "red", [] ],
+    [ "comporta:GND", "esp:GND.2", "black", [] ],
+    [ "comporta:PWM", "esp:19", "green", [] ],
+
+    [ "esp:25", "r_verde:2", "green", [] ],
+    [ "r_verde:1", "led_verde:A", "green", [] ],
+    [ "led_verde:C", "esp:GND.1", "black", [] ],
+
+    [ "esp:26", "r_amarelo:2", "yellow", [] ],
+    [ "r_amarelo:1", "led_amarelo:A", "yellow", [] ],
+    [ "led_amarelo:C", "esp:GND.1", "black", [] ],
+
+    [ "esp:27", "r_vermelho:2", "red", [] ],
+    [ "r_vermelho:1", "led_vermelho:A", "red", [] ],
+    [ "led_vermelho:C", "esp:GND.1", "black", [] ],
+
+    [ "btn_rede:1.l", "esp:4", "blue", [] ],
+    [ "btn_rede:2.l", "esp:GND.2", "black", [] ]
+  ],
+  "dependencies": {}
+}
