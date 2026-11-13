@@ -11,6 +11,8 @@ Ferramenta: Claude (Anthropic).
 5. Envio dos prints do monitor serial durante os testes no Wokwi, mostrando o MQTT reconectando depois de cada publicação.
 6. "o que ficou para trás? o que falta fazer?" para revisar as pendências da entrega.
 7. Envio do recado do professor com o padrão de qualidade do checkpoint 4 (arquivos, funções, structs, enums, watchdog, sem delay, debounce e interrupção).
+8. Envio das gravações de tela do Wokwi e do painel, pedindo para conferir se faltava algo e editar tudo em um vídeo só, com legendas no lugar da narração.
+9. Pedido de revisão do repositório inteiro antes da entrega.
 
 ## O que a IA fez
 
@@ -22,14 +24,17 @@ Ferramenta: Claude (Anthropic).
 - Aplicou a correção (`setKeepAlive(60)`), um log de queda de conexão e um ajuste para o aviso da trava de segurança aparecer só uma vez.
 - Fixou a versão da plataforma no `platformio.ini` e espaçou os LEDs no diagrama.
 - Conferiu o código contra o padrão do checkpoint 4 e adicionou o que faltava: watchdog de tarefas, botão por interrupção com debounce e a struct `LeituraBorda`.
+- Assistiu às gravações, apontou as partes que faltavam (comando remoto e trava de segurança) e montou o vídeo final com ffmpeg: recortes ampliados do LCD e do serial, legendas, esperas aceleradas e a chave de escrita do ThingSpeak escondida.
+- Revisou o README e corrigiu a codificação do arquivo, que tinha quebrado os acentos.
 
 ## O que foi revisado por mim
 
 - Configurei o canal e o device MQTT no ThingSpeak e as credenciais no `secrets.h`, que fica fora do Git.
 - Compilei no meu computador e rodei a simulação no Wokwi pelo VS Code.
-- Testei os três estados mexendo na distância do HC-SR04: NORMAL, ALERTA (140 cm) e INUNDACAO (84 cm), com a comporta fechando sozinha.
+- Testei os três estados mexendo na distância do HC-SR04: NORMAL, ALERTA (distância de 140 cm) e INUNDACAO (distância de 84 cm), com a comporta fechando sozinha.
 - Conferi as publicações chegando no ThingSpeak.
 - Testei o comando remoto pelo field 6: forçar fechar (1), forçar abrir (2) e voltar para automático (0).
 - Confirmei a trava de segurança: com o nível em inundação, o comando de abrir foi ignorado e a comporta continuou fechada.
 - Testei o botão de queda de rede: MQTT cai, WiFi cai, LEDs e comporta continuam funcionando, depois tudo reconecta.
+- Gravei as telas da simulação para o vídeo, incluindo os comandos remotos pela API do ThingSpeak.
 - Percebi nos testes que o MQTT reconectava a cada envio e que a mesma mensagem remota chegava duas vezes. Depois da correção, rodei 2 minutos e conferi uma conexão só, com publicações seguidas sem queda.

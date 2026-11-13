@@ -12,6 +12,18 @@ Nas cheias de maio de 2024, muita gente em Porto Alegre e na região metropolita
 
 Esta parte do projeto é o dispositivo IoT: um ESP32 simulado no Wokwi.
 
+## Vídeo de demonstração
+
+[`video/alertacheia_edge.mp4`](video/alertacheia_edge.mp4) (4 min 33 s, sem narração, com legendas). No GitHub, abra o arquivo e clique em **View raw** para assistir ou baixar.
+
+O vídeo mostra, na mesma tela, o circuito no Wokwi, o LCD ampliado, o monitor serial e o painel web:
+
+1. Partida: o ESP32 conecta ao WiFi e ao MQTT e publica a primeira leitura.
+2. Mudança de nível: NORMAL, ALERTA e INUNDACAO, com LEDs, LCD, comporta e painel web atualizando.
+3. Queda de rede: o botão derruba o MQTT e depois o WiFi; o LCD mostra `OFF`, a decisão continua na borda e tudo reconecta sozinho.
+4. Configuração remota: o limiar de alerta trocado pelo field4 chega por MQTT, muda o estado no LCD e aparece no painel.
+5. Trava de segurança: o comando remoto de abrir (field6 = 2) é ignorado durante a inundação.
+
 ## O que o dispositivo faz
 
 | Requisito | Como foi feito |
@@ -20,7 +32,7 @@ Esta parte do projeto é o dispositivo IoT: um ESP32 simulado no Wokwi.
 | Atuação com lógica na borda | Servo representando a comporta. A decisão de fechar é tomada no ESP32, mesmo sem internet. |
 | Interface local | LCD 20x4 I2C com nível, estado, comporta e status de WiFi/MQTT. LEDs verde, amarelo e vermelho indicando o estado. |
 | Envio por MQTT | Publica nível, estado e comporta no ThingSpeak a cada 20 s. |
-| Persistência | Histórico salvo no canal do ThingSpeak, lido depois pelo código Python do projeto. |
+| Persistência | Histórico salvo no canal do ThingSpeak, lido depois pelo painel web e pelo código Python do projeto. |
 | Recepção de configuração e acionamento remoto | Recebe limiar de alerta, limiar de inundação e comando da comporta pelos fields 4, 5 e 6. |
 
 ### Regras de decisão na borda
@@ -30,16 +42,16 @@ O nível é calculado como `nivel = 300 cm - distância até a água`, porque o 
 | Estado | Condição de entrada | LED | Comporta (modo AUTO) |
 |---|---|---|---|
 | NORMAL | nível abaixo do limiar de alerta | verde | aberta |
-| ALERTA | nível a partir de 150 cm | amarelo | aberta |
-| INUNDACAO | nível a partir de 200 cm | vermelho | fechada |
+| ALERTA | nível a partir do limiar de alerta (padrão 150 cm) | amarelo | aberta |
+| INUNDACAO | nível a partir do limiar de inundação (padrão 200 cm) | vermelho | fechada |
 
-- **Histerese de 10 cm na descida:** para sair de ALERTA o nível precisa baixar de 140 cm, e para sair de INUNDACAO precisa baixar de 190 cm. Sem isso, a água oscilando em volta do limiar faria a comporta abrir e fechar sem parar.
-- **Trava de segurança:** comando remoto de abrir a comporta é ignorado enquanto o estado for INUNDACAO.
-- **Configuração validada:** limiar recebido só é aceito se `0 < alerta < inundação <= 300`.
+- **Histerese de 10 cm na descida:** com os limiares padrão, para sair de ALERTA o nível precisa ficar abaixo de 140 cm, e para sair de INUNDACAO precisa ficar abaixo de 190 cm. Sem isso, a água oscilando em volta do limiar faria a comporta abrir e fechar sem parar.
+- **Trava de segurança:** o comando remoto de abrir a comporta é ignorado enquanto o estado for INUNDACAO. O monitor serial registra `Trava de seguranca: comando de abrir ignorado durante inundacao`.
+- **Configuração validada:** um limiar recebido só é aceito se `0 < alerta < inundação <= 300`.
 
 ## Padrão de qualidade do firmware
 
-Seguindo o padrão pedido nos checkpoints do 2º semestre:
+Segue o padrão pedido nos checkpoints do 2º semestre:
 
 - **Arquivos e funções:** cada responsabilidade em uma biblioteca própria (`sensors`, `control`, `display`, `mqtt`), e as regras de decisão em `regras.cpp`, sem hardware, testáveis no PC.
 - **Enums e structs:** `EstadoNivel` e `ModoComporta` para estados e modos; `LeituraBorda` agrupa nível, estado, comporta e modo, e é o que a tela mostra e o MQTT publica.
@@ -64,11 +76,11 @@ WiFi:OK   MQTT:OK        <- status da conexão
 
 Durante a queda, o sensor continua lendo, os LEDs e a comporta continuam reagindo, e a tela continua atualizando. A reconexão não trava o loop.
 
-**Para mudar o nível no simulador:** clique no HC-SR04 e mova o controle de distância. Distância menor significa água mais alta (100 cm de distância = 200 cm de nível = INUNDACAO).
+**Para mudar o nível no simulador:** clique no HC-SR04 e mova o controle de distância. Distância menor significa água mais alta (100 cm de distância = 200 cm de nível = INUNDACAO). O valor medido fica alguns centímetros diferente da conta (no vídeo, 250 cm de distância deram 46,5 cm de nível): é a diferença entre o tempo de eco que o Wokwi gera e a conversão `tempo / 58` do código. A média móvel também leva 5 leituras para acompanhar uma mudança.
 
 ## Plataforma IoT: ThingSpeak
 
-Um canal com 6 fields:
+Canal usado no projeto: **3567645**, com 6 fields:
 
 | Field | Nome | Quem escreve | Valores |
 |---|---|---|---|
@@ -84,15 +96,15 @@ Tópicos MQTT (broker `mqtt3.thingspeak.com:1883`):
 - Publicação: `channels/<CANAL_ID>/publish` com payload `field1=152.3&field2=1&field3=0`
 - Assinatura: `channels/<CANAL_ID>/subscribe/fields/field4`, `field5` e `field6`
 
-Para mandar uma configuração ou comando remoto, basta escrever no field pela API de escrita do canal. Exemplo, forçar fechar a comporta:
+Para mandar uma configuração ou um comando remoto, basta escrever no field pela API de escrita do canal. Exemplo para forçar o fechamento da comporta:
 
 ```
 https://api.thingspeak.com/update?api_key=<WRITE_API_KEY>&field6=1
 ```
 
-Voltar ao automático: `field6=0`. Trocar o limiar de alerta para 170 cm: `field4=170`.
+Voltar ao automático: `field6=0`. Trocar o limiar de alerta para 170 cm: `field4=170`. Se a resposta da API for `0`, o ThingSpeak recusou a escrita por ter vindo menos de 15 s depois da anterior; basta repetir.
 
-O dashboard do dispositivo fica na entrega de Front-end Design. O próprio canal do ThingSpeak também mostra os gráficos de cada field.
+O dashboard do dispositivo fica na entrega de Front-end Design (painel web do AlertaCheia, que aparece no vídeo). O próprio canal do ThingSpeak também mostra os gráficos de cada field.
 
 ## Como rodar
 
@@ -127,6 +139,7 @@ lib/mqtt/                 WiFi e MQTT sem bloqueio, configuração remota
 src/main.cpp              agenda de tarefas por millis()
 diagram.json              circuito do Wokwi
 test/test_regras.cpp      teste da lógica de borda
+video/                    vídeo de demonstração
 ```
 
 ## Circuito
@@ -141,9 +154,4 @@ test/test_regras.cpp      teste da lógica de borda
 
 ## Uso de IA
 
-Código desenvolvido com apoio de IA para revisão e organização. Os prompts estão em `prompts.md`.
-
-## V�deo de demonstra��o
-
-[video/alertacheia_edge.mp4](video/alertacheia_edge.mp4): funcionamento completo no Wokwi, painel web, queda de Wi-Fi e MQTT, comandos remotos e trava de seguran�a.
-
+Código e vídeo desenvolvidos com apoio de IA (Claude). O que foi pedido, o que a IA fez e o que eu revisei estão em `prompts.md`.
