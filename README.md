@@ -142,3 +142,8 @@ test/test_regras.cpp      teste da l√≥gica de borda
 ## Uso de IA
 
 C√≥digo desenvolvido com apoio de IA para revis√£o e organiza√ß√£o. Os prompts est√£o em `prompts.md`.
+
+## VÌdeo de demonstraÁ„o
+
+[video/alertacheia_edge.mp4](video/alertacheia_edge.mp4): funcionamento completo no Wokwi, painel web, queda de Wi-Fi e MQTT, comandos remotos e trava de seguranÁa.
+
