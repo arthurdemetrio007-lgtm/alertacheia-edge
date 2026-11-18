@@ -4,15 +4,17 @@ Ferramenta: Claude (Anthropic).
 
 ## Prompts
 
-1. Análise do enunciado da Global Solution e das entregas de cada disciplina, com o tema de enchentes.
-2. "o sensor é da materia de edge?" e pedido para começar o dispositivo a partir do projeto `ThingSpeak_ESP32` usado em aula.
-3. Ajuda para criar o canal e o device MQTT no ThingSpeak e configurar o `secrets.h`.
-4. Envio do erro `MissingPackageManifestError` no primeiro build do PlatformIO.
-5. Envio dos prints do monitor serial durante os testes no Wokwi, mostrando o MQTT reconectando depois de cada publicação.
-6. "o que ficou para trás? o que falta fazer?" para revisar as pendências da entrega.
-7. Envio do recado do professor com o padrão de qualidade do checkpoint 4 (arquivos, funções, structs, enums, watchdog, sem delay, debounce e interrupção).
-8. Envio das gravações de tela do Wokwi e do painel, pedindo para conferir se faltava algo e editar tudo em um vídeo só, com legendas no lugar da narração.
-9. Pedido de revisão do repositório inteiro antes da entrega.
+Cada item resume o que foi pedido ao assistente e o que eu enviei junto.
+
+1. Pedi a análise do enunciado da Global Solution e das entregas de cada disciplina, com o tema de enchentes.
+2. Perguntei se o sensor pertencia à disciplina de Edge e pedi para começar o dispositivo a partir do projeto `ThingSpeak_ESP32` usado em aula.
+3. Pedi orientação para criar o canal e o device MQTT no ThingSpeak e configurar o `secrets.h`.
+4. [Erro `MissingPackageManifestError` no primeiro build do PlatformIO] Enviei o erro para descobrir a causa.
+5. [Prints do monitor serial durante os testes no Wokwi] Relatei que o MQTT reconectava depois de cada publicação.
+6. Pedi uma revisão das pendências da entrega.
+7. [Recado do professor com o padrão de qualidade do checkpoint 4: arquivos, funções, structs, enums, watchdog, sem delay, debounce e interrupção] Pedi a conferência do código contra esse padrão.
+8. [Gravações de tela do Wokwi e do painel] Pedi para conferir se faltava algo e editar tudo em um vídeo só, com legendas no lugar da narração.
+9. Pedi a revisão do repositório inteiro antes da entrega.
 
 ## O que a IA fez
 
